@@ -1,0 +1,7 @@
+/build*/
+/.local/
+*.exe
+*.obj
+*.o
+*.log
+.vs/
