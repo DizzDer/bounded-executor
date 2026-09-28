@@ -8,12 +8,12 @@
 int main() {
     try {
         bool invalid = false;
-        try { concurrency::bounded_executor invalid_pool(0, 1); }
+        try { tasking::bounded_executor invalid_pool(0, 1); }
         catch (const std::invalid_argument&) { invalid = true; }
         CHECK(invalid);
 
         // Synchronization, rather than sleeps, makes queue saturation deterministic.
-        concurrency::bounded_executor pool(1, 1);
+        tasking::bounded_executor pool(1, 1);
         std::promise<void> started, release;
         auto gate = release.get_future().share();
         auto first = pool.try_submit([&] { started.set_value(); gate.wait(); return 7; });
@@ -29,7 +29,7 @@ int main() {
         CHECK(pool.stats().accepted == 2);
         CHECK(pool.stats().rejected == 2);
 
-        concurrency::bounded_executor exceptions(1, 4);
+        tasking::bounded_executor exceptions(1, 4);
         auto failure = exceptions.try_submit([]() -> int { throw std::runtime_error("task error"); });
         bool propagated = false;
         try { (void)failure->get(); } catch (const std::runtime_error&) { propagated = true; }
@@ -39,7 +39,7 @@ int main() {
 
         std::atomic<int> calls{0};
         {
-            concurrency::bounded_executor stress(4, 4000);
+            tasking::bounded_executor stress(4, 4000);
             std::vector<std::thread> producers;
             std::atomic<bool> rejected{false};
             for (int p = 0; p < 4; ++p) producers.emplace_back([&] {

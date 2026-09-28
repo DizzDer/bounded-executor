@@ -14,7 +14,7 @@
 #include <utility>
 #include <vector>
 
-namespace concurrency {
+namespace tasking {
 
 // Nonblocking admission, FIFO dispatch, drain-on-close. Tasks must not destroy
 // their own executor or wait for other tasks on the same saturated executor.
@@ -114,4 +114,4 @@ private:
     bool closed_ = false;
 };
 
-} // namespace concurrency
+} // namespace tasking

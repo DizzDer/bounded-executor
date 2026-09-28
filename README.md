@@ -6,7 +6,7 @@ A dependency-free C++17 thread pool with explicit backpressure, future-based res
 
 ```cpp
 #include "bounded_executor.hpp"
-concurrency::bounded_executor pool(4, 64);
+tasking::bounded_executor pool(4, 64);
 auto result = pool.try_submit([] { return 6 * 7; });
 if (result) {
     const auto answer = result->get(); // 42; task exceptions propagate here
